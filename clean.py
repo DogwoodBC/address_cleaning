@@ -52,12 +52,15 @@ with open(file_name) as csvfile:
             else:
                 info = xmltodict.parse(r.text)
                 if(float(info['geodata']['standard']['confidence']) > 0.7):
-                    row[prefix + 'No.'] = info['geodata']['standard']['stnumber']
-                    row[prefix + 'Address'] = info['geodata']['standard']['staddress']
-                    row[prefix + 'City'] = info['geodata']['standard']['city']
-                    row[prefix + 'Postal Code'] = info['geodata']['postal']
-                    row[prefix + 'Long'] = info['geodata']['longt']
-                    row[prefix + 'Lat'] = info['geodata']['latt']
-                    row[prefix + ' confidence'] = info['geodata']['standard']['confidence']
-
+                    try:
+                        geodata = info['geodata']
+                        row[prefix + 'No.'] = geodata['standard']['stnumber']
+                        row[prefix + 'Address'] = geodata['standard']['staddress']
+                        row[prefix + 'City'] = geodata['standard']['city']
+                        row[prefix + 'Postal Code'] = geodata['postal']
+                        row[prefix + 'Long'] = geodata['longt']
+                        row[prefix + 'Lat'] = geodata['latt']
+                        row[prefix + ' confidence'] = geodata['standard']['confidence']
+                    except KeyError:
+                        print("Information missing in match {}", geodata)
             writer.writerow(row)
