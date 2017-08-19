@@ -20,7 +20,8 @@ file_name = args.f if args.f else "dogwood_sample_address_data.csv"
 write_file_name = args.o if args.o else "output.csv"
 google_flag = args.g if args.g else False
 
-gmaps = googlemaps.Client(key=os.environ['GOOGLEMAPS_KEY'])
+if(google_flag == True):
+    gmaps = googlemaps.Client(key=os.environ['GOOGLEMAPS_KEY'])
 
 
 
@@ -52,16 +53,16 @@ def add_geocoder_result(row, result, prefix):
         print(error['description'])
         return row
     else:
-        if(float(geodata['standard']['confidence']) > 0.1):
             try:
-                row[prefix + 'No.'] = geodata['standard']['stnumber']
-                row[prefix + 'Address'] = geodata['standard']['staddress']
-                row[prefix + 'City'] = geodata['standard']['city']
-                row[prefix + 'Postal Code'] = geodata.get('postal')
-                row[prefix + 'Long'] = geodata.get('longt')
-                row[prefix + 'Lat'] = geodata.get('latt')
-                row[prefix + 'confidence'] = geodata['standard']['confidence']
-                return row
+                if(float(geodata['standard']['confidence']) > 0.1):
+                    row[prefix + 'No.'] = geodata['standard']['stnumber']
+                    row[prefix + 'Address'] = geodata['standard']['staddress']
+                    row[prefix + 'City'] = geodata['standard']['city']
+                    row[prefix + 'Postal Code'] = geodata.get('postal')
+                    row[prefix + 'Long'] = geodata.get('longt')
+                    row[prefix + 'Lat'] = geodata.get('latt')
+                    row[prefix + 'confidence'] = geodata['standard']['confidence']
+                    return row
             except KeyError as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(exc_type, exc_tb.tb_lineno)
